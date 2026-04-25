@@ -1,0 +1,38 @@
+name: Automated Data Preprocessing
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  preprocess:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install scikit-learn imbalanced-learn joblib pandas numpy
+    
+    - name: Run preprocessing automation
+      run: |
+        cd preprocessing
+        python automate_Michelle_Anditio.py
+    
+    - name: Commit and push changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add preprocessing/columns.csv preprocessing/pipeline.joblib preprocessing/credit_risk_preprocessing/
+        git commit -m "Auto: Update preprocessed data" || echo "No changes to commit"
+        git push
