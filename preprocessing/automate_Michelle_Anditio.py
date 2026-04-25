@@ -81,7 +81,7 @@ def inference(new_data, load_path):
     return transformed_data
 
 
-data = pd.read_csv('../credit-risk_raw.csv')
+data = pd.read_csv('../credit_risk_raw.csv')
 X_train, X_test, y_train, y_test = preprocess_data(data, 'loan_status', 'pipeline.joblib', 'columns.csv')
 
 transformed_test = inference(X_test, 'pipeline.joblib')
