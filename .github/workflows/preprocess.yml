@@ -33,6 +33,6 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add preprocessing/columns.csv preprocessing/pipeline.joblib preprocessing/credit_risk_preprocessing/
+        git add preprocessing/columns.csv preprocessing/pipeline.joblib
         git commit -m "Auto: Update preprocessed data" || echo "No changes to commit"
         git push
