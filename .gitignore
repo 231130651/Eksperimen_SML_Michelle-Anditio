@@ -1,6 +1,3 @@
-preprocessing/credit_risk_preprocessing/
-preprocessing/*.joblib
-preprocessing/*.csv
 __pycache__/
 *.pyc
 *.pyo
