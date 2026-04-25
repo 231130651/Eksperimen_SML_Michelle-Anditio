@@ -74,9 +74,13 @@ def preprocess_data(data, target_column, save_path, file_path):
     return X_train, X_test, y_train, y_test
 
 
-def inference(new_data, load_path):
+def inference(new_data, load_path, column_names):
     preprocessor = load(load_path)
     print(f"Pipeline preprocessing dimuat dari: {load_path}")
+    
+    if not isinstance(new_data, pd.DataFrame):
+        new_data = pd.DataFrame(new_data, columns=column_names)
+    
     transformed_data = preprocessor.transform(new_data)
     return transformed_data
 
@@ -84,5 +88,8 @@ def inference(new_data, load_path):
 data = pd.read_csv('../credit_risk_raw.csv')
 X_train, X_test, y_train, y_test = preprocess_data(data, 'loan_status', 'pipeline.joblib', 'columns.csv')
 
-transformed_test = inference(X_test, 'pipeline.joblib')
+column_names = pd.read_csv('columns.csv').columns.tolist()
+
+X_test_df = pd.DataFrame(X_test, columns=column_names)
+transformed_test = inference(X_test_df, 'pipeline.joblib', column_names)
 print(f"Data test setelah inference: {transformed_test.shape}")
