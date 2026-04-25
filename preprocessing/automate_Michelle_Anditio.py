@@ -7,9 +7,12 @@ from imblearn.over_sampling import SMOTE
 from joblib import dump, load
 import pandas as pd
 import numpy as np
+import os
 
 
 def preprocess_data(data, target_column, save_path, file_path):
+    data = data.drop_duplicates()
+    
     data = data[data['person_age'] < 100]
     data = data[data['person_emp_length'] < 60]
 
@@ -53,6 +56,20 @@ def preprocess_data(data, target_column, save_path, file_path):
     dump(preprocessor, save_path)
     print(f"Pipeline disimpan ke: {save_path}")
 
+    output_dir = 'credit_risk_preprocessing'
+    os.makedirs(output_dir, exist_ok=True)
+    
+    train_df = pd.DataFrame(X_train, columns=numeric_features)
+    train_df[target_column] = y_train.values
+    
+    test_df = pd.DataFrame(X_test, columns=numeric_features)
+    test_df[target_column] = y_test.values
+    
+    train_df.to_csv(f'{output_dir}/credit_risk_train.csv', index=False)
+    test_df.to_csv(f'{output_dir}/credit_risk_test.csv', index=False)
+    
+    print(f"Train dan test data disimpan ke: {output_dir}/")
+
     print(f"Shape X_train: {X_train.shape}, X_test: {X_test.shape}")
     return X_train, X_test, y_train, y_test
 
@@ -64,5 +81,8 @@ def inference(new_data, load_path):
     return transformed_data
 
 
-data = pd.read_csv('../credit_risk_raw.csv')
-preprocess_data(data, 'loan_status', 'pipeline.joblib', 'columns.csv')
+data = pd.read_csv('../credit-risk_raw.csv')
+X_train, X_test, y_train, y_test = preprocess_data(data, 'loan_status', 'pipeline.joblib', 'columns.csv')
+
+transformed_test = inference(X_test, 'pipeline.joblib')
+print(f"Data test setelah inference: {transformed_test.shape}")
