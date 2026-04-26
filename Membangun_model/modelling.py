@@ -23,19 +23,14 @@ y_test = test_df['loan_status']
 # Set experiment
 mlflow.set_experiment("credit_risk_modelling")
 
+# Autolog
+mlflow.autolog()
+
 with mlflow.start_run():
     # Train model
     model = RandomForestClassifier(n_estimators=100, random_state=42)
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
-
-    # Manual logging - metrics
-    mlflow.log_param("n_estimators", 100)
-    mlflow.log_param("random_state", 42)
-    mlflow.log_metric("accuracy", accuracy_score(y_test, y_pred))
-    mlflow.log_metric("precision", precision_score(y_test, y_pred))
-    mlflow.log_metric("recall", recall_score(y_test, y_pred))
-    mlflow.log_metric("f1_score", f1_score(y_test, y_pred))
     
     # Artefak 1 - Confusion Matrix
     cm = confusion_matrix(y_test, y_pred)
