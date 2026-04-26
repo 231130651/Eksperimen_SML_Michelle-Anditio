@@ -1,3 +1,5 @@
 __pycache__/
 *.pyc
 *.pyo
+Membangun_model/confusion_matrix.png
+Membangun_model/feature_importance.png
