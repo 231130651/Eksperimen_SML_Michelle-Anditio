@@ -6,7 +6,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix, classification_report
+from sklearn.metrics import confusion_matrix
+from mlflow.models.signature import infer_signature
 
 dagshub.init(repo_owner='231130651', repo_name='Eksperimen_SML_Michelle-Anditio', mlflow=True)
 
@@ -31,7 +32,7 @@ with mlflow.start_run():
     model = RandomForestClassifier(n_estimators=100, random_state=42)
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
-    
+
     # Artefak 1 - Confusion Matrix
     cm = confusion_matrix(y_test, y_pred)
     plt.figure(figsize=(6, 4))
@@ -43,7 +44,7 @@ with mlflow.start_run():
     plt.savefig('confusion_matrix.png')
     plt.close()
     mlflow.log_artifact('confusion_matrix.png')
-    
+
     # Artefak 2 - Feature Importance
     feature_importance = pd.Series(model.feature_importances_, index=X_train.columns)
     feature_importance = feature_importance.sort_values(ascending=False)
@@ -54,8 +55,5 @@ with mlflow.start_run():
     plt.savefig('feature_importance.png')
     plt.close()
     mlflow.log_artifact('feature_importance.png')
-
-    # Log model
-    mlflow.sklearn.log_model(model, "random_forest_model")
 
     print("Training selesai! Cek DagsHub Experiments.")
